@@ -1,5 +1,7 @@
 EdwardHsu.ModifyDetector
 =====
+[![NuGet Version](https://img.shields.io/nuget/v/EdwardHsu.ModifyDetector.svg)](#) [![NuGet Download](https://img.shields.io/nuget/dt/EdwardHsu.ModifyDetector.svg)](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/) [![Github license](https://img.shields.io/github/license/XuPeiYao/EdwardHsu.ModifyDetector.svg)](#)
+
 This library is a .NET library designed to facilitate property modification detection within your classes. It provides a simple and efficient way to implement property change detection within your own classes.
 
 ## Features
