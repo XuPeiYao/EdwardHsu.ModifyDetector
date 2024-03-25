@@ -1,25 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Reflection;
+using System.Security.Cryptography;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EdwardHsu.ModifyDetector
 {
     public class ModifyDetector: IModifyDetector
     {
-        private const int DEFAULT_HASH_LOOP = 0x1111111;
-        private const int DEFAULT_HASH_NULL = 0xaaaaaaa;
-        private const int DEFAULT_HASH_INIT = 0x5555555;
+        private static readonly int DEFAULT_HASH_LOOP;
+        private static readonly int DEFAULT_HASH_NULL;
+        private static readonly int DEFAULT_HASH_INIT;
 
 
         private int? _detectorState;
         private Dictionary<MemberInfo, int> _memberStateMap = new Dictionary<MemberInfo, int>();
 
+
+        static ModifyDetector()
+        {
+            DEFAULT_HASH_LOOP = new object().GetHashCode();
+            DEFAULT_HASH_NULL = new object().GetHashCode();
+            DEFAULT_HASH_INIT = new object().GetHashCode();
+        }
+
+        /// <summary>
+        /// Update the detector state
+        /// </summary>
         public void UpdateDetectorState()
         {
             _detectorState = ComputeDetectorState(this, null);
             _memberStateMap = ComputeMemberState(this);
         }
-
+        
+        /// <summary>
+        /// Check if the object has modified
+        /// </summary>
+        /// <param name="modifiedMembers">Modified members</param>
+        /// <returns>Has modified or not</returns>
         public bool HasModified(out IEnumerable<ModifiedMember> modifiedMembers)
         {
             var modifiedMembersMap = new Dictionary<ModifyDetector, IList<ModifiedMember>>();
@@ -35,8 +55,7 @@ namespace EdwardHsu.ModifyDetector
             modifiedMembers = modifiedMembersMap[this].AsReadOnly();
             return true;
         }
-
-
+        
         private static bool InternalHasModified(ModifyDetector detector,
             Dictionary<ModifyDetector, IList<ModifiedMember>> modifiedMembersMap)
         {
@@ -125,7 +144,7 @@ namespace EdwardHsu.ModifyDetector
         {
             var detectTargets = detector.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public |
                                                               BindingFlags.NonPublic | BindingFlags.GetProperty |
-                                                              BindingFlags.GetField)
+                                                              BindingFlags.GetField | BindingFlags.FlattenHierarchy)
                 .Select(x => (attr: x.GetCustomAttribute<ModifyDetectTargetAttribute>(), memberInfo: x))
                 .Where(x => x.attr != null);
 
@@ -170,7 +189,8 @@ namespace EdwardHsu.ModifyDetector
             {
                 var orderedDetectTargets = GetDetectTargets(md);
 
-                var state = DEFAULT_HASH_INIT;
+                var stateList = new List<int>();
+                stateList.Add(DEFAULT_HASH_INIT);
 
                 foreach (var detectTarget in orderedDetectTargets)
                 {
@@ -181,24 +201,53 @@ namespace EdwardHsu.ModifyDetector
                         _ => null
                     };
 
-                    state ^= ComputeDetectorState(memberValue, path.ToList());
+                    var hash = detectTarget.GetHashCode();
+                    hash += ComputeDetectorState(memberValue, path.ToList());
+
+                    stateList.Add(hash);
+
+                    Debug.Print($"Hash {detectTarget.Name}={memberValue}\tHash={hash}");
                 }
+
+                var state = GetHashFromIntAry(stateList);
 
                 return state;
             }
-            else if(obj is IEnumerable enumData)
+            else if (obj is string strData)
             {
-                var state = DEFAULT_HASH_INIT;
+                return obj.GetHashCode();
+            }
+            else if (obj is IEnumerable enumData)
+            {
+                var stateList = new List<int>();
+                stateList.Add(DEFAULT_HASH_INIT);
 
                 foreach (var item in enumData)
                 {
-                    state ^= ComputeDetectorState(item, path.ToList());
+                    stateList.Add(ComputeDetectorState(item, path.ToList()));
                 }
 
-                return state;
+                return GetHashFromIntAry(stateList);
             }
 
             return obj.GetHashCode();
+        }
+
+
+        private static int GetHashFromIntAry(IEnumerable<int> ary)
+        {
+            var data = ary.Select(x=> BitConverter.GetBytes(x)).SelectMany(x=>x).ToArray();
+
+            SHA512 shaM = new SHA512Managed();
+            var hashResult = shaM.ComputeHash(data);
+
+            var hash = new List<byte>();
+            for (int i = 0; i < hashResult.Length; i+=2)
+            {
+                hash.Add((byte)(hashResult[i] ^ hashResult[i+1]));
+            }
+
+            return BitConverter.ToInt32(hash.ToArray());
         }
 
         private static Dictionary<MemberInfo, int> ComputeMemberState(IModifyDetector detector)

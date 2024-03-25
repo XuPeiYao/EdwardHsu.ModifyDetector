@@ -37,6 +37,20 @@ namespace EdwardHsu.ModifyDetector.Tests
             }
         }
 
+        [Fact(DisplayName = "Property Changed - 3")]
+        public void PropertyChanged3()
+        {
+            var node = new Node();
+
+            node.Name = "New Name";
+            node.Description = "New Name";
+            Assert.True(node.HasModified(out var modifiedMembers));
+
+            Assert.Equal(2, modifiedMembers.Count());
+            Assert.Equal(nameof(Node.Name), modifiedMembers.First().Member.Name);
+        }
+
+
         [Fact(DisplayName = "Property Changed with cycle reference - 1")]
         public void PropertyChangedWithCycleReference1()
         {
