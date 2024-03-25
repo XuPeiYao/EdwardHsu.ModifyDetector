@@ -2,29 +2,29 @@ using EdwardHsu.ModifyDetector.Tests.Models;
 
 namespace EdwardHsu.ModifyDetector.Tests
 {
-    public class PropertyChangedTest
+    public class FieldChangedTest
     {
-        [Fact(DisplayName = "Property Changed - 1")]
-        public void PropertyChanged1()
+        [Fact(DisplayName = "Field Changed - 1")]
+        public void FieldChanged1()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
             
             node.Name = "New Name";
             Assert.True(node.HasModified(out var modifiedMembers));
 
             Assert.Single(modifiedMembers);
-            Assert.Equal(nameof(TestNode1.Name), modifiedMembers.First().Member.Name);
+            Assert.Equal(nameof(TestNode2.Name), modifiedMembers.First().Member.Name);
         }
 
-        [Fact(DisplayName = "Property Changed - 2")]
-        public void PropertyChanged2()
+        [Fact(DisplayName = "Field Changed - 2")]
+        public void FieldChanged2()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
 
             node.Id = Guid.NewGuid();
             node.Name = "New Name";
 
-            var changedProperties = new List<string> { nameof(TestNode1.Id), nameof(TestNode1.Name)};
+            var changedProperties = new List<string> { nameof(TestNode2.Id), nameof(TestNode2.Name)};
 
             Assert.True(node.HasModified(out var modifiedMembers));
             
@@ -37,30 +37,30 @@ namespace EdwardHsu.ModifyDetector.Tests
             }
         }
 
-        [Fact(DisplayName = "Property Changed - 3")]
-        public void PropertyChanged3()
+        [Fact(DisplayName = "Field Changed - 3")]
+        public void FieldChanged3()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
 
             node.Name = "New Name";
             node.Description = "New Name";
             Assert.True(node.HasModified(out var modifiedMembers));
 
             Assert.Equal(2, modifiedMembers.Count());
-            Assert.Equal(nameof(TestNode1.Name), modifiedMembers.First().Member.Name);
+            Assert.Equal(nameof(TestNode2.Name), modifiedMembers.First().Member.Name);
         }
 
 
-        [Fact(DisplayName = "Property Changed with cycle reference - 1")]
-        public void PropertyChangedWithCycleReference1()
+        [Fact(DisplayName = "Field Changed with cycle reference - 1")]
+        public void FieldChangedWithCycleReference1()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
 
             node.Id = Guid.NewGuid();
             node.Name = "New Name";
             node.Parent = node;
 
-            var changedProperties = new List<string> { nameof(TestNode1.Id), nameof(TestNode1.Name), nameof(TestNode1.Parent) };
+            var changedProperties = new List<string> { nameof(TestNode2.Id), nameof(TestNode2.Name), nameof(TestNode2.Parent) };
 
             Assert.True(node.HasModified(out var modifiedMembers));
 
@@ -73,18 +73,18 @@ namespace EdwardHsu.ModifyDetector.Tests
             }
         }
 
-        [Fact(DisplayName = "Property Changed with cycle reference - 2")]
-        public void PropertyChangedWithCycleReference2()
+        [Fact(DisplayName = "Field Changed with cycle reference - 2")]
+        public void FieldChangedWithCycleReference2()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
 
             node.Id = Guid.NewGuid();
             node.Name = "New Name";
-            node.Children = new List<TestNode1>()
+            node.Children = new List<TestNode2>()
             {
-                new TestNode1()
+                new TestNode2()
                 {
-                    Children = new List<TestNode1>()
+                    Children = new List<TestNode2>()
                     {
                         node
                     }
@@ -92,7 +92,7 @@ namespace EdwardHsu.ModifyDetector.Tests
                 node
             };
 
-            var changedProperties = new List<string> { nameof(TestNode1.Id), nameof(TestNode1.Name), nameof(TestNode1.Children) };
+            var changedProperties = new List<string> { nameof(TestNode2.Id), nameof(TestNode2.Name), nameof(TestNode2.Children) };
 
             Assert.True(node.HasModified(out var modifiedMembers));
 
@@ -105,25 +105,25 @@ namespace EdwardHsu.ModifyDetector.Tests
             }
         }
 
-        [Fact(DisplayName = "Property Changed with cycle reference - 3")]
-        public void PropertyChangedWithCycleReference3()
+        [Fact(DisplayName = "Field Changed with cycle reference - 3")]
+        public void FieldChangedWithCycleReference3()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
 
             node.Id = Guid.NewGuid();
             node.Name = "New Name";
-            node.Children = new List<TestNode1>()
+            node.Children = new List<TestNode2>()
             {
-                new TestNode1()
+                new TestNode2()
                 {
-                    Children = new List<TestNode1>()
+                    Children = new List<TestNode2>()
                     {
                         node
                     }
                 }
             };
 
-            var changedProperties = new List<string> { nameof(TestNode1.Id), nameof(TestNode1.Name), nameof(TestNode1.Children) };
+            var changedProperties = new List<string> { nameof(TestNode2.Id), nameof(TestNode2.Name), nameof(TestNode2.Children) };
 
             Assert.True(node.HasModified(out var modifiedMembers));
 
@@ -143,37 +143,37 @@ namespace EdwardHsu.ModifyDetector.Tests
 
             Assert.Single(modifiedMembers);
 
-            Assert.Equal(nameof(TestNode1.Children), modifiedMembers.First().Member.Name);
+            Assert.Equal(nameof(TestNode2.Children), modifiedMembers.First().Member.Name);
 
             Assert.Equal(nameof(node.Name),modifiedMembers.First().Children.First().Children.First().Member.Name);
 
         }
 
-        [Fact(DisplayName = "Property Changed then rollback")]
-        public void PropertyChangedThenRollback()
+        [Fact(DisplayName = "Field Changed then rollback")]
+        public void FieldChangedThenRollback()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
 
             var origionName = node.Name;
             node.Name = "New Name";
             Assert.True(node.HasModified(out var modifiedMembers));
             Assert.Single(modifiedMembers);
-            Assert.Equal(nameof(TestNode1.Name), modifiedMembers.First().Member.Name);
+            Assert.Equal(nameof(TestNode2.Name), modifiedMembers.First().Member.Name);
 
             node.Name = origionName;
 
             Assert.False(node.HasModified(out _));
         }
 
-        [Fact(DisplayName = "Property Changed then UpdateDetectorState")]
-        public void PropertyChangedThenRollbackWithChildren()
+        [Fact(DisplayName = "Field Changed then UpdateDetectorState")]
+        public void FieldChangedThenRollbackWithChildren()
         {
-            var node = new TestNode1();
+            var node = new TestNode2();
             
             node.Name = "New Name";
             Assert.True(node.HasModified(out var modifiedMembers));
             Assert.Single(modifiedMembers);
-            Assert.Equal(nameof(TestNode1.Name), modifiedMembers.First().Member.Name);
+            Assert.Equal(nameof(TestNode2.Name), modifiedMembers.First().Member.Name);
 
             node.UpdateDetectorState();
 
