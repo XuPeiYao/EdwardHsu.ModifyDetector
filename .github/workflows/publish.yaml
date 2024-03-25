@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
       - name: Test
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --collect:"XPlat Code Coverage"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
