@@ -15,12 +15,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.0.x
-      - name: Restore packages
+      - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build      
-      - name: Unit Test
-        run: dotnet test --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
+      - name: Test
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:

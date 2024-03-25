@@ -2,3 +2,4 @@
 bin
 obj
 .vscode
+EdwardHsu.ModifyDetector.Tests/coverage.opencover.xml
