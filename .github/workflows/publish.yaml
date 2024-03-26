@@ -53,8 +53,3 @@ jobs:
         working-directory: EdwardHsu.ModifyDetector
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-      - name: Publish symbol-packages to NuGet.org
-        run: dotnet nuget push EdwardHsu.ModifyDetector.${VERSION}.snupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
-        working-directory: EdwardHsu.ModifyDetector
-        env:
-          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
