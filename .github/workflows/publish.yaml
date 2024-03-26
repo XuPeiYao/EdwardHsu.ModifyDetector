@@ -46,10 +46,15 @@ jobs:
         run: dotnet build --configuration Release /p:Version=${VERSION} --no-restore
         working-directory: EdwardHsu.ModifyDetector
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output .
+        run: dotnet pack --configuration Release /p:Version=${VERSION} /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg --no-build --output .
         working-directory: EdwardHsu.ModifyDetector
-      - name: Publish to NuGet.org
+      - name: Publish package to NuGet.org
         run: dotnet nuget push EdwardHsu.ModifyDetector.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+        working-directory: EdwardHsu.ModifyDetector
+        env:
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      - name: Publish symbol-packages to NuGet.org
+        run: dotnet nuget push EdwardHsu.ModifyDetector.${VERSION}.snupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         working-directory: EdwardHsu.ModifyDetector
         env:
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
