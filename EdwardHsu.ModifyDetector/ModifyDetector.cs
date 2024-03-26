@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.Cryptography;
 
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EdwardHsu.ModifyDetector
 {
@@ -52,7 +51,7 @@ namespace EdwardHsu.ModifyDetector
                 return false;
             }
 
-            modifiedMembers = modifiedMembersMap[this].AsReadOnly();
+            modifiedMembers = modifiedMembersMap[this].ToImmutableList();
             return true;
         }
         
