@@ -238,7 +238,7 @@ namespace EdwardHsu.ModifyDetector
         {
             var data = ary.Select(x=> BitConverter.GetBytes(x)).SelectMany(x=>x).ToArray();
 
-            SHA512 shaM = new SHA512Managed();
+            using SHA512 shaM = new SHA512Managed();
             var hashResult = shaM.ComputeHash(data);
 
             var hash = new List<byte>();
