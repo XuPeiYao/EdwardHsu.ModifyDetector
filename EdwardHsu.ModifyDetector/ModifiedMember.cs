@@ -15,7 +15,7 @@ namespace EdwardHsu.ModifyDetector
 
         public int? ElementAt { get; set; }
 
-        public IList<ModifiedMember> Children { get; set; }
+        public IList<ModifiedMember> Children { get; internal set; }
 
         public ModifiedMember(MemberInfo member)
         {

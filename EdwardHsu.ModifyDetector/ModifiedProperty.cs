@@ -9,11 +9,12 @@ namespace EdwardHsu.ModifyDetector
 {
     public class ModifiedProperty: ModifiedMember
     {
-        public new PropertyInfo Member { get; set; }
-        public IList<ModifiedMember> Children { get; set; }
+        public new PropertyInfo Member { get; internal set; }
 
-        public ModifiedProperty(PropertyInfo member):base(member)
+        public ModifiedProperty(PropertyInfo member): base(member)
         {
+            Member = member;
+            Children = null;
         }
     }
 }

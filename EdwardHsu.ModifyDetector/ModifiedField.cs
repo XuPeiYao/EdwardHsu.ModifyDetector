@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace EdwardHsu.ModifyDetector
 {
-    public class ModifiedField:ModifiedMember
+    public class ModifiedField: ModifiedMember
     {
-        public new FieldInfo Member { get; set; }
-        public IList<ModifiedMember> Children { get; set; }
+        public new FieldInfo Member { get; internal set; }
 
         public ModifiedField(FieldInfo member) : base(member)
         {
+            Member = member;
+            Children = null;
         }
     }
 }

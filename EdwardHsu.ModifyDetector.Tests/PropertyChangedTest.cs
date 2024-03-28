@@ -4,6 +4,18 @@ namespace EdwardHsu.ModifyDetector.Tests
 {
     public class PropertyChangedTest
     {
+        [Fact(DisplayName = "UninitializedState")]
+        public void UninitializedState()
+        {
+            var node = new TestNode3();
+            node.Name = "New Name";
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                node.HasModified(out _);
+            });
+        }
+
         [Fact(DisplayName = "Property Changed - 1")]
         public void PropertyChanged1()
         {
@@ -48,6 +60,21 @@ namespace EdwardHsu.ModifyDetector.Tests
 
             Assert.Equal(2, modifiedMembers.Count());
             Assert.Equal(nameof(TestNode1.Name), modifiedMembers.First().Member.Name);
+        }
+
+        [Fact(DisplayName = "Property Changed - 4")]
+        public void PropertyChanged4()
+        {
+            var node = new TestNode1();
+
+            node.Name = "New Name";
+            node.Description = "New Name";
+            node.Parent = new TestNode1()
+            {
+                Name = "New Parent Name"
+            };
+            
+            Assert.True(node.HasModified(out _));
         }
 
 
