@@ -20,12 +20,8 @@ jobs:
       - name: Build
         run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
       - name: Test
-        run: dotnet test --collect:"XPlat Code Coverage"
+        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: Upload coverage reports to Codecov
-        run: |
-          # Replace `linux` below with the appropriate OS
-          # Options are `alpine`, `linux`, `macos`, `windows`
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${{ secrets.CODECOV_TOKEN }}
-      
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
