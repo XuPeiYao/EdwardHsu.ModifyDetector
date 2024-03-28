@@ -208,8 +208,8 @@ namespace EdwardHsu.ModifyDetector.Tests
         }
 
 
-        [Fact(DisplayName = "Compare the differences between two objects")]
-        public void CompareTwoObjects()
+        [Fact(DisplayName = "Compare the differences between two objects - 1")]
+        public void CompareTwoObjects1()
         {
             var node1 = new TestNode1();
             var node2 = new TestNode1(){Id = node1.Id, Children = node1.Children};
@@ -239,6 +239,38 @@ namespace EdwardHsu.ModifyDetector.Tests
             Assert.True(ModifyDetector.HasDifference(node1, new TestNode4(), out differenceMembers));
 
             Assert.Equal(5, differenceMembers.Count());
+        }
+
+        [Fact(DisplayName = "Compare the differences between two objects - 2")]
+        public void CompareTwoObjects2()
+        {
+            var student1 = new Student()
+            {
+                Id = 1,
+                Name = new FullName()
+                {
+                    FirstName = "Edward",
+                    LastName = "Hsu"
+                }
+            };
+            var student2 = new Student()
+            {
+                Id = 1,
+                Name = new FullName()
+                {
+                    FirstName = "Bill",
+                    LastName = "Chen"
+                }
+            };
+
+            Assert.True(ModifyDetector.HasDifference(student1, student2, out var differenceMembers));
+
+            Assert.Equal(1, differenceMembers.Count());
+            Assert.Equal(nameof(Student.Name), differenceMembers.First().Member.Name);
+
+            Assert.Equal(2, differenceMembers.First().Children.Count);
+            Assert.Equal(nameof(FullName.FirstName), differenceMembers.First().Children.First().Member.Name);
+            Assert.Equal(nameof(FullName.LastName), differenceMembers.First().Children.Last().Member.Name);
         }
     }
 }
