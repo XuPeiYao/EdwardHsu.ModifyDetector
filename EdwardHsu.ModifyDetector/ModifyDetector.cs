@@ -54,7 +54,67 @@ namespace EdwardHsu.ModifyDetector
             modifiedMembers = modifiedMembersMap[this].ToImmutableList();
             return true;
         }
-        
+
+
+        public static bool HasDifference(IModifyDetector left, IModifyDetector right, out IEnumerable<ModifiedMember> differenceMembers)
+        {
+            var leftState = ComputeDetectorState(left, null);
+            var rightState = ComputeDetectorState(right, null);
+
+            if (leftState == rightState)
+            {
+                differenceMembers = Enumerable.Empty<ModifiedMember>();
+                return false;
+            }
+
+            var leftMemberState = ComputeMemberState(left);
+            var rightMemberState = ComputeMemberState(right);
+
+            var leftDetectTargets = GetDetectTargets(left).ToArray();
+            var rightDetectTargets = GetDetectTargets(right).ToArray();
+
+            var modifiedMembersList = new List<ModifiedMember>();
+
+            var intersectDetectTargets = leftDetectTargets.Intersect(rightDetectTargets);
+
+            var exceptDetectTargets = leftDetectTargets.Except(rightDetectTargets);
+            if (exceptDetectTargets.Any())
+            {
+                modifiedMembersList.AddRange(exceptDetectTargets.Select(x => MemberInfoToModifiedMember(x)));
+            }
+
+            
+            foreach (var detectTarget in intersectDetectTargets)
+            {
+                var leftStateValue = leftMemberState[detectTarget];
+                var rightStateValue = rightMemberState[detectTarget];
+
+                if (leftStateValue != rightStateValue)
+                {
+                    var modifiedMember = MemberInfoToModifiedMember(detectTarget);
+                    modifiedMembersList.Add(modifiedMember);
+
+                    var leftMemberValue = GetMemberValueByMemberInfo(left, detectTarget);
+                    var rightMemberValue = GetMemberValueByMemberInfo(right, detectTarget);
+
+                    if (leftMemberValue == null || rightMemberValue == null) continue;
+
+                    if (leftMemberValue is IModifyDetector leftModifyDetector &&
+                        rightMemberValue is IModifyDetector rightModifyDetector)
+                    {
+                        if (HasDifference(leftModifyDetector, rightModifyDetector, out var propertyModifiedMembers))
+                        {
+                            modifiedMember.Children = propertyModifiedMembers.ToImmutableList();
+                        }
+                    }
+                }
+            }
+
+            differenceMembers = modifiedMembersList.ToImmutableList();
+            return true;
+        }
+
+
         private static bool InternalHasModified(ModifyDetector detector,
             Dictionary<ModifyDetector, IList<ModifiedMember>> modifiedMembersMap)
         {

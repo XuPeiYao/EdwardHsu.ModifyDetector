@@ -206,5 +206,39 @@ namespace EdwardHsu.ModifyDetector.Tests
 
             Assert.False(node.HasModified(out _));
         }
+
+
+        [Fact(DisplayName = "Compare the differences between two objects")]
+        public void CompareTwoObjects()
+        {
+            var node1 = new TestNode1();
+            var node2 = new TestNode1(){Id = node1.Id, Children = node1.Children};
+
+            node1.Name = "New Name";
+            node2.Name = "New Name";
+
+            Assert.False(ModifyDetector.HasDifference(node1,node2, out _));
+
+            node2.Name = "New Name 2";
+
+            Assert.True(ModifyDetector.HasDifference(node1, node2, out var differenceMembers));
+
+            Assert.Single(differenceMembers);
+
+            Assert.Equal(nameof(TestNode1.Name), differenceMembers.First().Member.Name);
+
+            node2.Parent = new TestNode1();
+
+            Assert.True(ModifyDetector.HasDifference(node1, node2, out differenceMembers));
+
+            Assert.Equal(2, differenceMembers.Count());
+            
+            Assert.Equal(nameof(TestNode1.Name), differenceMembers.First().Member.Name);
+            Assert.Equal(nameof(TestNode1.Parent), differenceMembers.Last().Member.Name);
+            
+            Assert.True(ModifyDetector.HasDifference(node1, new TestNode4(), out differenceMembers));
+
+            Assert.Equal(5, differenceMembers.Count());
+        }
     }
 }
