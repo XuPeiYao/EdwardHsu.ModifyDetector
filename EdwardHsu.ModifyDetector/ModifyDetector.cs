@@ -197,15 +197,15 @@ namespace EdwardHsu.ModifyDetector
                     {
                         PropertyInfo pi => pi.GetValue(obj),
                         FieldInfo fi => fi.GetValue(obj),
+#if !DEBUG
                         _ => null
+#endif
                     };
 
                     var hash = detectTarget.GetHashCode();
                     hash += ComputeDetectorState(memberValue, path.ToList());
 
                     stateList.Add(hash);
-
-                    Debug.Print($"Hash {detectTarget.Name}={memberValue}\tHash={hash}");
                 }
 
                 var state = GetHashFromIntAry(stateList);
@@ -263,7 +263,9 @@ namespace EdwardHsu.ModifyDetector
                 {
                     PropertyInfo pi => pi.GetValue(detector),
                     FieldInfo fi => fi.GetValue(detector),
+#if !DEBUG
                     _ => null
+#endif
                 };
                 
                 var tempPath = new List<object>();
@@ -282,7 +284,9 @@ namespace EdwardHsu.ModifyDetector
             {
                 PropertyInfo pi => pi.GetValue(obj),
                 FieldInfo fi => fi.GetValue(obj),
+#if !DEBUG
                 _ => throw new NotSupportedException("Unsupported member type. Currently only support PropertyInfo and FieldInfo")
+#endif
             };
         }
 
@@ -294,7 +298,9 @@ namespace EdwardHsu.ModifyDetector
             {
                 PropertyInfo pi => new ModifiedProperty(pi),
                 FieldInfo fi => new ModifiedField(fi),
+#if !DEBUG
                 _ => throw new NotSupportedException("Unsupported member type. Currently only support PropertyInfo and FieldInfo")
+#endif
             };
         }
     }
