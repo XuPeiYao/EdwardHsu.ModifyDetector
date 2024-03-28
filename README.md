@@ -5,6 +5,7 @@ EdwardHsu.ModifyDetector
 [![NuGet Version](https://img.shields.io/nuget/v/EdwardHsu.ModifyDetector.svg)]([#](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/))
 [![NuGet Download](https://img.shields.io/nuget/dt/EdwardHsu.ModifyDetector.svg)](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/)
 [![Github license](https://img.shields.io/github/license/XuPeiYao/EdwardHsu.ModifyDetector.svg)]([#](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/))
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FXuPeiYao%2FEdwardHsu.ModifyDetector.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2FXuPeiYao%2FEdwardHsu.ModifyDetector?ref=badge_small)
 
 This library is a .NET library designed to facilitate property modification detection within your classes. It provides a simple and efficient way to implement property change detection within your own classes.
 
