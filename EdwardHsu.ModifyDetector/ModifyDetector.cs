@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 
 namespace EdwardHsu.ModifyDetector
 {
+    /// <summary>
+    /// Modify detector
+    /// </summary>
     public class ModifyDetector: IModifyDetector
     {
         private static readonly int DEFAULT_HASH_LOOP;
@@ -33,12 +36,13 @@ namespace EdwardHsu.ModifyDetector
             _detectorState = ComputeDetectorState(this, null);
             _memberStateMap = ComputeMemberState(this);
         }
-        
+
         /// <summary>
         /// Check if the object has modified
         /// </summary>
         /// <param name="modifiedMembers">Modified members</param>
         /// <returns>Has modified or not</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the detector state is not initialized</exception>
         public bool HasModified(out IEnumerable<ModifiedMember> modifiedMembers)
         {
             var modifiedMembersMap = new Dictionary<ModifyDetector, IList<ModifiedMember>>();
@@ -55,7 +59,13 @@ namespace EdwardHsu.ModifyDetector
             return true;
         }
 
-
+        /// <summary>
+        /// Check Object has difference
+        /// </summary>
+        /// <param name="left">Object 1</param>
+        /// <param name="right">Object 2</param>
+        /// <param name="differenceMembers">Difference members</param>
+        /// <returns>Has difference or not</returns>
         public static bool HasDifference(IModifyDetector left, IModifyDetector right, out IEnumerable<ModifiedMember> differenceMembers)
         {
             var leftState = ComputeDetectorState(left, null);

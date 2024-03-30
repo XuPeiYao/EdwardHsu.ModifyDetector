@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace EdwardHsu.ModifyDetector
 {
+    /// <summary>
+    /// Modified Field
+    /// </summary>
     public class ModifiedField: ModifiedMember
     {
         public new FieldInfo Member { get; internal set; }
