@@ -2,9 +2,9 @@ EdwardHsu.ModifyDetector
 =====
 [![Unit Test](https://github.com/XuPeiYao/EdwardHsu.ModifyDetector/actions/workflows/unit-test.yaml/badge.svg)](https://github.com/XuPeiYao/EdwardHsu.ModifyDetector/actions/workflows/unit-test.yaml)
 [![codecov](https://codecov.io/gh/XuPeiYao/EdwardHsu.ModifyDetector/graph/badge.svg?token=CPJJI7Q7NV)](https://codecov.io/gh/XuPeiYao/EdwardHsu.ModifyDetector)
-[![NuGet Version](https://img.shields.io/nuget/v/EdwardHsu.ModifyDetector.svg)]((https://www.nuget.org/packages/EdwardHsu.ModifyDetector/))
+[![NuGet Version](https://img.shields.io/nuget/v/EdwardHsu.ModifyDetector.svg)](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/)
 [![NuGet Download](https://img.shields.io/nuget/dt/EdwardHsu.ModifyDetector.svg)](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/)
-[![Github license](https://img.shields.io/github/license/XuPeiYao/EdwardHsu.ModifyDetector.svg)]((https://www.nuget.org/packages/EdwardHsu.ModifyDetector/))
+[![Github license](https://img.shields.io/github/license/XuPeiYao/EdwardHsu.ModifyDetector.svg)](https://www.nuget.org/packages/EdwardHsu.ModifyDetector/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FXuPeiYao%2FEdwardHsu.ModifyDetector.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2FXuPeiYao%2FEdwardHsu.ModifyDetector?ref=badge_small)
 [![CodeQL](https://github.com/XuPeiYao/EdwardHsu.ModifyDetector/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/XuPeiYao/EdwardHsu.ModifyDetector/actions/workflows/github-code-scanning/codeql)
 
